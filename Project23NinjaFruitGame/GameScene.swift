@@ -21,11 +21,7 @@ class GameScene: SKScene {
     
     var gameScore: SKLabelNode!
     
-    var score = 0 {
-        didSet {
-            gameScore.text = "Score: \(score)"
-        }
-    }
+    var scoreViewModel = ScoreViewModel()
     
     var livesImage = [SKSpriteNode]()
     var lives = 3
@@ -86,7 +82,10 @@ class GameScene: SKScene {
         addChild(gameScore)
         
         gameScore.position = CGPoint(x: 8, y: 8)
-        score = 0
+        scoreViewModel.score.value = 0
+        scoreViewModel.score.bind { [weak self] in
+            self?.gameScore.text = "Score: \($0)"
+        }
         
     }
     
@@ -161,9 +160,9 @@ class GameScene: SKScene {
                 }
                 
                 if node.name == "enemy" {
-                    score+=1
+                    scoreViewModel.score.value+=1
                 } else {
-                    score+=10
+                    scoreViewModel.score.value+=10
                 }
                 
                 node.name = ""
